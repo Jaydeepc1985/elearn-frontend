@@ -9,7 +9,7 @@ trigger:
 pool:
   name: jay
 
--stages:
+stages:
   - stage: appBuild
     displayName: "Building the app"
     jobs:
@@ -39,4 +39,4 @@ pool:
             inputs:
               PathtoPublish: '$(System.DefaultWorkingDirectory)/build'
               ArtifactName: 'appArtifacts'
-              publishLocation: 'Container'
+              publishLocation: 'Container'
