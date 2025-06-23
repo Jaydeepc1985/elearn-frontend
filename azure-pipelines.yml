@@ -9,14 +9,34 @@ trigger:
 pool:
   name: jay
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '20.x'
-  displayName: 'Install Node.js'
+-stages:
+  - stage: appBuild
+    displayName: "Building the app"
+    jobs:
+      - job: appBuildjob
+        displayName: "appBuild job"
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSource: 'spec'
+              versionSpec: '16.x'
 
-- script: |
-    npm install
-    npm run build
-    if [ -d dist ]; then echo "✅ Build folder created"; else echo "❌ Build failed: no dist folder"; exit 1; fi
-  displayName: 'npm install and build'
+          - task: Npm@1
+            displayName: "npm install task"
+            inputs:
+              command: 'install'
+              workingDir: '$(System.DefaultWorkingDirectory)'
+
+          - task: Npm@1
+            displayName: "npm run build taks"
+            inputs:
+              command: 'custom'
+              workingDir: '$(System.DefaultWorkingDirectory)'
+              customCommand: 'run build'
+
+          - task: PublishBuildArtifacts@1
+            displayName: "publish build task"
+            inputs:
+              PathtoPublish: '$(System.DefaultWorkingDirectory)/build'
+              ArtifactName: 'appArtifacts'
+              publishLocation: 'Container'
