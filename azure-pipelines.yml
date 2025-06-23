@@ -18,4 +18,5 @@ steps:
 - script: |
     npm install
     npm run build
+    if [ -d dist ]; then echo "✅ Build folder created"; else echo "❌ Build failed: no dist folder"; exit 1; fi
   displayName: 'npm install and build'
