@@ -35,3 +35,35 @@ stages:
               PathtoPublish: '$(System.DefaultWorkingDirectory)/build'
               ArtifactName: 'appArtifacts'
               publishLocation: 'Container'
+
+
+
+  - stage: Deploy
+    displayName: "Deploy to VM"
+    jobs:
+      - job: DeployJob
+        displayName: "Deploy app to Azure VM"
+        steps:
+          # 1. Download artifacts
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'appArtifacts'
+              downloadPath: '$(Pipeline.Workspace)'
+
+          # 2. Copy artifact to VM
+          - task: CopyFilesOverSSH@0
+            inputs:
+              sshEndpoint: 'frontend-svc'   # ADO me banao SSH Service Connection
+              sourceFolder: '$(Pipeline.Workspace)/appArtifacts'
+              contents: '**'
+              targetFolder: '/var/www/html/'   # Static site ke liye Nginx/Apache ka root
+
+          # 3. Restart web server (Nginx)
+          - task: SSH@0
+            inputs:
+              sshEndpoint: 'frontend-svc'
+              runOptions: 'commands'
+              commands: |
+                sudo systemctl restart nginx
