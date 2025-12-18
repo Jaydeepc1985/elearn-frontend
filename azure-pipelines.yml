@@ -5,12 +5,52 @@ pool:
   name: jay
 
 stages:
-  - stage: appBuild
-    displayName: "Building the app"
+  - stage: appBuild_lint
+    displayName: "Building the app after Lint"
     jobs:
-      - job: appBuildjob
-        displayName: "appBuild job"
-        steps:
+    - job: lint
+      displayName: Lint
+      steps:
+      - task: PowerShell@2
+        continueOnError: true
+        displayName: Lint JavaScript(Biome)
+        inputs:
+          targetType: 'inline'
+          script: |
+            Invoke-WebRequest -Uri "https://github.com/biomejs/biome/releases/download/%40biomejs%2Fbiome%402.3.8/biome-win32-x64.exe" -OutFile "$(Agent.ToolsDirectory)/biome.exe"
+            $(Agent.ToolsDirectory)/biome.exe lint $(System.DefaultWorkingDirectory)/src/
+
+      - task: PowerShell@2
+        continueOnError: true
+        displayName: Lint CSS(Styelint)  
+        inputs:
+          targetType: 'inline'
+          script: |
+            npm install -g stylelint
+            npm install -g stylelint-config-standard        
+            stylelint $(System.DefaultWorkingDirectory)/src --config stylelint.config.mjs
+
+      - task: PowerShell@2
+        continueOnError: true
+        displayName: Lint YAML(yamllint)    
+        inputs:
+          targetType: 'inline'
+          script: |
+            pip install --user yamllint
+            yamllint $(System.DefaultWorkingDirectory)
+
+      - task: PowerShell@2
+        continueOnError: true
+        displayName: Lint Markdown(markdownlint)      
+        inputs:
+          targetType: 'inline'
+          script: |
+            npm install -g markdownlint-cli      
+            markdownlint $(System.DefaultWorkingDirectory)/
+
+    - job: appBuildjob
+      displayName: "appBuild job"
+      steps:
           - task: NodeTool@0
             inputs:
               versionSource: 'spec'
