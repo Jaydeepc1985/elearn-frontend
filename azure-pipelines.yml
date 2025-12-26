@@ -47,6 +47,8 @@ stages:
           cliProjectKey: 'todo-app'
           cliProjectName: 'todo-app'
           cliSources: '.'
+          extraProperties: |
+            sonar.branch.name=main
 
       - task: PowerShell@2
         continueOnError: true
