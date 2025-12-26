@@ -39,6 +39,15 @@ stages:
             pip install --user yamllint
             yamllint $(System.DefaultWorkingDirectory)
 
+      - task: SonarQubePrepare@8
+        inputs:
+          SonarQube: 'SonarQube-svc'
+          scannerMode: 'cli'
+          configMode: 'manual'
+          cliProjectKey: 'todo-app'
+          cliProjectName: 'todo-app'
+          cliSources: '.'
+
       - task: PowerShell@2
         continueOnError: true
         displayName: Lint Markdown(markdownlint)      
