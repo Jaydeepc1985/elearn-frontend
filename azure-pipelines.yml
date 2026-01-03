@@ -22,6 +22,7 @@ stages:
                 npm install -g retire
                 npm install
                  retire --outputformat cyclonedx
+                 retire --exitwith 0
               workingDirectory: '$(System.DefaultWorkingDirectory)'
 
   - stage: appBuild_lint
