@@ -5,6 +5,20 @@ pool:
   name: jay
 
 stages:
+  - stage: SCA_scan
+    displayName: Software composition Analysis
+    jobs:
+      - job: SCA_scan
+        displayName: Software composition Analysis
+        steps:
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: |
+                npm install -g retire
+                npm install
+                retire --outputformat cyclonedx
+
   - stage: appBuild_lint
     displayName: "Building the app after Lint"
     jobs:
