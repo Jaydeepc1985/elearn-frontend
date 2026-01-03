@@ -17,7 +17,8 @@ stages:
               script: |
                 npm install -g retire
                 npm install
-                retire --outputformat cyclonedx
+                 retire --outputformat cyclonedx
+              workingDirectory: '$(System.DefaultWorkingDirectory)'
 
   - stage: appBuild_lint
     displayName: "Building the app after Lint"
