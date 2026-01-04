@@ -46,9 +46,8 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            npm install -g stylelint
-            npm install -g stylelint-config-standard        
-            stylelint $(System.DefaultWorkingDirectory)/src --config stylelint.config.mjs
+            npm install
+            npx stylelint $(System.DefaultWorkingDirectory)/src --config stylelint.config.mjs
 
       - task: PowerShell@2
         continueOnError: true
