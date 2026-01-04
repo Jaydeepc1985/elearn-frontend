@@ -49,6 +49,11 @@ stages:
             npm install
             npx stylelint $(System.DefaultWorkingDirectory)/src --config stylelint.config.mjs
 
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.x'
+          addToPath: true
+          architecture: 'x64'
       - task: PowerShell@2
         continueOnError: true
         displayName: Lint YAML(yamllint)    
