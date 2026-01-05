@@ -89,7 +89,7 @@ stages:
           targetType: 'inline'
           script: |
             npm install markdownlint-cli
-            npx markdownlint "$(Build.SourcesDirectory)/**/*.md"
+            npx markdownlint "$(System.DefaultWorkingDirectory)/**/*.md"
 
     - job: appBuildjob
       displayName: "appBuild job"
